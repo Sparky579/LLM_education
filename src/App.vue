@@ -92,6 +92,27 @@ function render(md) {
   return DOMPurify.sanitize(html)
 }
 
+// 清理空的助手回复及其对应的用户消息
+function cleanEmptyAssistantMessages(messages) {
+  const cleaned = []
+  for (let i = 0; i < messages.length; i++) {
+    const msg = messages[i]
+    
+    // 如果是用户消息，检查下一条是否是空的助手回复
+    if (msg.role === 'user') {
+      const nextMsg = messages[i + 1]
+      // 如果下一条是助手消息且内容为空，则跳过这一对消息
+      if (nextMsg && nextMsg.role === 'assistant' && (!nextMsg.content || nextMsg.content.trim() === '')) {
+        i++ // 跳过下一条助手消息
+        continue
+      }
+    }
+    
+    cleaned.push(msg)
+  }
+  return cleaned
+}
+
 async function send() {
   const text = input.value.trim()
   if (!text || loading.value) return
@@ -100,6 +121,7 @@ async function send() {
 
   const userMsg = { role: 'user', content: text }
   const history = messages.value.filter(m => m.role !== 'system')
+  const cleanedHistory = cleanEmptyAssistantMessages(history)
   const context = [{ role: 'system', content: sysPrompt.value }]
   if (reference.text) {
     context.push({
@@ -107,7 +129,7 @@ async function send() {
       content: `以下为用户提供的参考资料文本，请将其作为回答时的辅助背景进行引用。不要泄漏原文，也不要逐字复述，仅在必要时简要引用要点。\n\n[参考开始]\n${reference.text}\n[参考结束]`
     })
   }
-  context.push(...history, userMsg)
+  context.push(...cleanedHistory, userMsg)
   messages.value.push(userMsg)
 
   const assistantMsg = reactive({ role: 'assistant', content: '' })
