@@ -9,7 +9,7 @@ import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 const DEFAULT_BASE = 'https://byd.pekka.asia'
-const DEFAULT_MODEL = 'gpt-4o-mini'
+const DEFAULT_MODEL = 'gemini-2.5-flash-non-thinking'
 
 marked.setOptions({ breaks: true })
 marked.use(markedKatex({
@@ -337,6 +337,7 @@ function removeReference() {
 </template>
 
 <style scoped>
+.global-root-size-fix { display: none; }
 .app {
   height: 100vh;
   display: flex;
@@ -380,9 +381,11 @@ function removeReference() {
   display: flex;
   padding: 0 16px 16px;
   overflow: hidden;
+  min-height: 0;
 }
 .chat {
-  width: 92vw;
+  max-width: 70vw;
+  /* max-width: 1000px; */
   margin: 0 auto;
   background: #fff;
   border: 1px solid #eee;
@@ -391,17 +394,18 @@ function removeReference() {
   box-shadow: 0 2px 6px rgba(0,0,0,.05);
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
 }
 .messages {
-  flex: 1;
+  flex: 1 1 0%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 8px;
+  min-height: 0;
 }
 .msg {
   display: grid;
@@ -430,7 +434,7 @@ function removeReference() {
   align-items: stretch;
 }
 .composer textarea {
-  width: 100%;
+  /* width: 100%; */
   min-width: 0;
   padding: 10px 12px;
   border: 1px solid #e5e7eb;
@@ -441,7 +445,7 @@ function removeReference() {
   box-sizing: border-box;
 }
 .composer .primary {
-  width: 100%;
+  width: 90%;
   height: 56px;
   box-sizing: border-box;
 }
@@ -528,4 +532,9 @@ function removeReference() {
 .markdown :deep(h3) { margin: 10px 0 6px; }
 .markdown :deep(ul), .markdown :deep(ol) { padding-left: 20px; }
 .markdown :deep(blockquote) { border-left: 3px solid #e5e7eb; padding-left: 10px; color: #6b7280; }
+</style>
+
+<style>
+html, body, #app { height: 95vh; margin: 0; }
+#app { overflow: hidden; }
 </style>
