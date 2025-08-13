@@ -338,9 +338,10 @@ function removeReference() {
 
 <style scoped>
 .app {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .topbar {
   display: flex;
@@ -378,6 +379,7 @@ function removeReference() {
   flex: 1;
   display: flex;
   padding: 0 16px 16px;
+  overflow: hidden;
 }
 .chat {
   width: 92vw;
@@ -389,7 +391,9 @@ function removeReference() {
   box-shadow: 0 2px 6px rgba(0,0,0,.05);
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 80px);
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 .messages {
   flex: 1;
@@ -419,19 +423,27 @@ function removeReference() {
 
 .composer {
   display: grid;
-  grid-template-columns: 1fr 120px;
+  grid-template-columns: minmax(0, 1fr) 120px;
   gap: 10px;
   padding-top: 8px;
   border-top: 1px solid #f1f5f9;
+  align-items: stretch;
 }
 .composer textarea {
   width: 100%;
+  min-width: 0;
   padding: 10px 12px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   outline: none;
   resize: vertical;
-  min-height: 72px;
+  min-height: 56px;
+  box-sizing: border-box;
+}
+.composer .primary {
+  width: 100%;
+  height: 56px;
+  box-sizing: border-box;
 }
 .primary {
   background: #4f46e5;
